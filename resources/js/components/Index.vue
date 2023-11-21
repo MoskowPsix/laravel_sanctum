@@ -1,7 +1,7 @@
 <template lang="">
     <div class="mt-5">
         <h2>Sanctum App</h2>
-        <div><router-link v-if="token" :to="{name: 'index'}">Index</router-link></div>
+        <div><router-link v-if="localStorage.getItem('x_xsrf_token')" :to="{name: 'index'}">Index</router-link></div>
         <div><router-link v-if="token" :to="{name: 'get'}">Get</router-link></div>
         <div><router-link v-if="!token" :to="{name: 'user.login'}">Login</router-link></div>
         <div><router-link v-if="!token" :to="{name: 'user.registration'}">Registration</router-link></div>
@@ -11,6 +11,7 @@
         <router-view/>
 </template>
 <script>
+
 export default {
     name:'Index',
     data() {
@@ -19,11 +20,16 @@ export default {
         }
     },
     mounted() {
-        this.getToken()
+            this.getToken()
     },
-    updated() {
-        this.getToken(),
-        console.log('yes')
+    // beforeUpdate() { // Не срабатывает хз почему
+    //         this.getToken()
+    // },
+    updated() { // Не срабатывает хз почему
+        this.$nextTick(function () {
+            // this.getToken()
+            console.log('yes')
+        })
     },
     methods: {
         logout() {
@@ -36,9 +42,10 @@ export default {
             })
         },
         getToken() {
+            // console.log('yes', this.token)
             this.token = localStorage.getItem('x_xsrf_token')
         }
-    }
+    },
 }
 </script>
 <style lang="">
